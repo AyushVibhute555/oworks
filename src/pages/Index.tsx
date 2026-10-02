@@ -7,6 +7,7 @@ import LandingAccordionItem from "@/components/ui/interactive-image-accordion";
 import StackSpread from "@/components/shared/StackSpread";
 import { Button } from "@/components/ui/button";
 import CreativeHero from "@/components/ui/creative-hero";
+import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 
 const teaserServices = [
   {
@@ -135,42 +136,14 @@ export default function Index() {
       </section>
 
       {/* Testimonials */}
-      <section className="section-padding">
+      <section className="section-padding bg-cream-dark overflow-hidden">
         <div className="container-editorial px-6 md:px-12 lg:px-20">
           <ScrollReveal animationType="zoom-in">
-            <h2 className="font-serif text-4xl md:text-5xl text-ink mb-16 text-center">What Our Clients Say</h2>
+            <h2 className="font-serif text-4xl md:text-5xl text-ink mb-8 text-center">What Our Clients Say</h2>
           </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            {testimonials.map((testimonial, index) => (
-              <ScrollReveal key={index} delay={index * 150} yOffset={50}>
-                <motion.div 
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="p-8 md:p-10 bg-cream-dark rounded-tr-3xl rounded-bl-3xl h-full border border-divider/50 shadow-sm"
-                >
-                  <div className="flex gap-1 text-ink mb-6">
-                    {/* 5 Stars */}
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <svg key={star} className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <h3 className="font-serif text-2xl text-ink mb-4">{testimonial.headline}</h3>
-                  <p className="text-ink-light leading-relaxed italic mb-8">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-4 mt-auto">
-                    <div className="w-12 h-12 rounded-full bg-divider overflow-hidden">
-                      <img src={`https://i.pravatar.cc/150?u=${index}`} alt="Placeholder — Client Avatar" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-ink">Client</p>
-                      <p className="text-sm text-ink-muted">Valued Partner</p>
-                    </div>
-                  </div>
-                </motion.div>
-              </ScrollReveal>
-            ))}
-          </div>
+          <ScrollReveal animationType="fade-in" delay={100}>
+            <StaggerTestimonials />
+          </ScrollReveal>
         </div>
       </section>
 

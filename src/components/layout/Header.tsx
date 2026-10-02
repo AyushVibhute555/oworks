@@ -61,12 +61,13 @@ export function Header() {
           {/* Logo */}
           <Link
             to="/"
-            className={cn(
-              "font-serif text-xl md:text-2xl transition-colors duration-500 relative z-20",
-              isScrolled ? "text-ink" : "text-white drop-shadow-md"
-            )}
+            className="transition-opacity duration-500 relative z-20 hover:opacity-80"
           >
-            Oworks
+            <img 
+              src={isScrolled ? "/Oworks_Black.png" : "/Oworks_White.png"} 
+              alt="Oworks" 
+              className="h-8 md:h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation - Absolutely Centered */}
@@ -115,10 +116,10 @@ export function Header() {
           <div className="flex items-center justify-between">
             <Link
               to="/"
-              className="font-serif text-xl text-ink"
+              className="transition-opacity duration-300 hover:opacity-80"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Oworks
+              <img src="/Oworks_Black.png" alt="Oworks" className="h-8 w-auto object-contain" />
             </Link>
             <button
               onClick={() => setIsMobileMenuOpen(false)}

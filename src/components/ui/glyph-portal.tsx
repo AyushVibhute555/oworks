@@ -75,8 +75,10 @@ function interior(context: CanvasRenderingContext2D, char: string, font: string)
   }
   if (size < 3) return null;
   // Scan at 3× SVG size. Inscribe a disk in the square, with room for raster disagreement.
-  return { x: (bx + 1 - size / 2 - pad - left) / 3,
-    y: (by + 1 - size / 2 - pad - ascent) / 3, radius: (size / 2 - 1) / 3 };
+  return {
+    x: (bx + 1 - size / 2 - pad - left) / 3,
+    y: (by + 1 - size / 2 - pad - ascent) / 3, radius: (size / 2 - 1) / 3
+  };
 }
 
 function scrollParent(element: HTMLElement): HTMLElement | null {
@@ -134,16 +136,10 @@ export default function GlyphPortal({
     let fontDirty = true;
     // Freeze an available face for this mount. Late font swaps move the ink under the camera.
     // Preload custom faces before mounting; pending/failed faces use the supplied fallback stack.
+    // Force the use of the provided fontFamily instead of filtering it out and falling back to Arial.
     glyph.style.fontFamily = fontFamily;
-    const computedFamily = getComputedStyle(glyph).fontFamily;
-    const families = computedFamily.match(/(?:[^,"']+|"[^"]*"|'[^']*')+/g) ?? [];
-    const available = families.filter((family) => {
-      try { return document.fonts.check(`${weight} 100px ${family.trim()}`, text); }
-      catch { return false; }
-    });
-    glyph.style.fontFamily = [...available, DEFAULT_FONT].join(",");
     // A pending requested face may also hold WebKit's render loop. Keep that mount static.
-    stalled = available.length < families.length;
+    stalled = false;
 
     const readInk = () => {
       if (!context) return false;
@@ -154,9 +150,11 @@ export default function GlyphPortal({
       const metrics = context.measureText(text);
       const advances = Array.from({ length: text.length }, (_, i) => context.measureText(text.slice(0, i)).width);
       // SVG getBBox includes the font's line box in some engines. Frame visible ink instead.
-      bounds = { x: -metrics.actualBoundingBoxLeft, y: -metrics.actualBoundingBoxAscent,
+      bounds = {
+        x: -metrics.actualBoundingBoxLeft, y: -metrics.actualBoundingBoxAscent,
         width: metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight,
-        height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent };
+        height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+      };
       if (!bounds.width || !bounds.height) return false;
       center = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
       const requested = focusChar ? text.indexOf(focusChar.normalize("NFC")) : -1;
@@ -165,9 +163,11 @@ export default function GlyphPortal({
       for (const char of Array.from(text)) {
         context.font = `${font.fontWeight} 100px ${font.fontFamily}`;
         const m = context.measureText(char);
-        letters.push({ index: offset, x: advances[offset] - m.actualBoundingBoxLeft,
+        letters.push({
+          index: offset, x: advances[offset] - m.actualBoundingBoxLeft,
           y: -m.actualBoundingBoxAscent, width: m.actualBoundingBoxLeft + m.actualBoundingBoxRight,
-          height: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent });
+          height: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
+        });
         const found = interior(context, char, scanFont);
         if (found) candidates.push({ ...found, x: found.x + advances[offset], index: offset });
         offset += char.length;

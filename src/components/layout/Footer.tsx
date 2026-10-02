@@ -24,9 +24,9 @@ export function Footer() {
           <div className="md:col-span-4">
             <Link
               to="/"
-              className="font-serif text-2xl text-ink transition-opacity duration-300 hover:opacity-70"
+              className="transition-opacity duration-300 hover:opacity-70 inline-block"
             >
-              oworks
+              <img src="/Oworks_Black.png" alt="Oworks" className="h-8 md:h-10 w-auto object-contain" />
             </Link>
             <div className="mt-4 text-sm text-ink-muted max-w-xs space-y-2">
               <p>985, 13th Cross, 21st Main Rd, above Heart Care Clinic, Siddanna Layout, Banashankari 2nd Stage, Bengaluru, Karnataka 560070</p>

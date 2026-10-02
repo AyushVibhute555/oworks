@@ -8,14 +8,14 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       fontFamily: {
-        serif: ["Instrument Serif", "Georgia", "serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        // Brand font — Bona Nova (free alternative to Artifex CF).
+        brand: ['"Bona Nova"', '"Trykker"', "ui-serif", "Georgia", "serif"],
+        sans: ['"Bona Nova"', '"Trykker"', "ui-serif", "Georgia", "serif"],
+        serif: ['"Bona Nova"', '"Trykker"', "ui-serif", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
