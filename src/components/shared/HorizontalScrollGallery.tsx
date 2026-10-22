@@ -29,7 +29,7 @@ export const HorizontalScrollGallery = () => {
           </div>
         </div>
 
-        <motion.div style={{ x }} className="flex gap-8 px-12 md:px-24 lg:px-36">
+        <motion.div style={{ x }} className="flex gap-8 px-6 md:px-12 lg:px-20 xl:px-24">
           {services.slice(0, 6).map((service, index) => {
             // Give different cards different aspect ratios and alignments for that "premium editorial" feel
             const isPortrait = index % 2 === 0;
@@ -80,3 +80,5 @@ export const HorizontalScrollGallery = () => {
     </section>
   );
 };
+
+

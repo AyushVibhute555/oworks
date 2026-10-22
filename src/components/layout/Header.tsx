@@ -7,10 +7,11 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
+  { name: "Work", path: "/work" },
   { name: "Services", path: "/services" },
-  { name: "Industries", path: "/industries" },
-  { name: "Contact", path: "/contact" },
+  { name: "Partnerships", path: "/partnerships" },
+  { name: "About", path: "/about" },
+  { name: "Discuss your priorities", path: "/contact" },
 ];
 
 export function Header() {
@@ -55,7 +56,7 @@ export function Header() {
             "flex items-center justify-between relative transition-all duration-500 ease-out",
             isScrolled
               ? "w-[95%] md:w-[85%] max-w-6xl rounded-full bg-white/80 dark:bg-neutral-950/80 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-3 px-6 md:px-8"
-              : "w-full bg-gradient-to-b from-black/30 to-transparent border-b border-transparent py-6 md:py-8 px-6 md:px-12 lg:px-20"
+              : "w-full max-w-[1600px] mx-auto bg-gradient-to-b from-black/30 to-transparent border-b border-transparent py-6 md:py-8 px-6 md:px-12 lg:px-20 xl:px-24"
           )}
         >
           {/* Logo */}
@@ -196,3 +197,4 @@ export function Header() {
     </>
   );
 }
+

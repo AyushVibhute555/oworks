@@ -8,7 +8,7 @@ export default function Blog() {
     <Layout>
       {/* Hero Section */}
       <section className="pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="max-w-4xl">
             <ScrollReveal>
               <h1 className="font-serif text-5xl md:text-7xl text-ink mb-8">
@@ -26,7 +26,7 @@ export default function Blog() {
 
       {/* Blog Grid */}
       <section className="section-padding bg-cream-dark border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
             {blogPosts.map((post, index) => (
               <ScrollReveal key={post.slug} delay={index * 100}>
@@ -62,3 +62,4 @@ export default function Blog() {
     </Layout>
   );
 }
+

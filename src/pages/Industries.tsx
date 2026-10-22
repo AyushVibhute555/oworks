@@ -9,7 +9,7 @@ export default function Industries() {
     <Layout>
       {/* Hero Section */}
       <section className="pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
               <h1 className="font-serif text-5xl md:text-7xl text-ink mb-8">
@@ -32,7 +32,7 @@ export default function Industries() {
 
       {/* Industries Grid */}
       <section className="section-padding bg-cream-dark">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {industries.map((industry, index) => (
               <ScrollReveal key={industry.slug} delay={index * 100}>
@@ -59,7 +59,7 @@ export default function Industries() {
 
       {/* Closing CTA */}
       <section className="section-padding">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
+        <div className="container-editorial text-center">
           <ScrollReveal>
             <h2 className="font-serif text-3xl md:text-5xl text-ink mb-10">We would love to help you build your Brand!!</h2>
             <Link to="/contact" className="btn-primary inline-flex">
@@ -71,3 +71,4 @@ export default function Industries() {
     </Layout>
   );
 }
+

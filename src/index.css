@@ -187,12 +187,12 @@
 
   /* Section Spacing */
   .section-padding {
-    @apply py-24 md:py-32 lg:py-40 px-6 md:px-16 lg:px-24;
+    @apply py-24 md:py-32 lg:py-40;
   }
 
   /* Container */
   .container-editorial {
-    @apply max-w-7xl mx-auto;
+    @apply max-w-[1600px] mx-auto px-6 md:px-12 lg:px-20 xl:px-24;
   }
 
   /* Project Card */
@@ -287,4 +287,25 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Client Logo Marquee */
+@keyframes client-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(calc(-100% / 3), 0, 0);
+  }
+}
+
+.animate-client-marquee {
+  display: flex;
+  width: max-content;
+  animation: client-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-client-marquee:hover {
+  animation-play-state: paused;
 }

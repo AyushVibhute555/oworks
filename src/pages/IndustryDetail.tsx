@@ -35,7 +35,7 @@ export default function IndustryDetail() {
 
       {/* Industry Info */}
       <section className="section-padding">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             {/* Main Content */}
             <div className="lg:col-span-8">
@@ -98,7 +98,7 @@ export default function IndustryDetail() {
 
       {/* Closing CTA */}
       <section className="bg-cream-dark py-24 border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
+        <div className="container-editorial text-center">
           <ScrollReveal>
             <h2 className="font-serif text-3xl md:text-5xl text-ink mb-10">We would love to help you build your Brand!!</h2>
             <Link to="/contact" className="btn-primary inline-flex">
@@ -114,7 +114,7 @@ export default function IndustryDetail() {
           to={`/industries/${nextIndustry.slug}`}
           className="group block"
         >
-          <div className="container-editorial px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="container-editorial py-16 md:py-24">
             <div className="flex items-center justify-between">
               <div>
                 <p className="eyebrow mb-4">Next Industry</p>
@@ -134,7 +134,7 @@ export default function IndustryDetail() {
 
       {/* Back Link */}
       <section className="bg-cream-dark border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 py-8">
+        <div className="container-editorial py-8">
           <Link 
             to="/industries" 
             className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors duration-300"
@@ -147,3 +147,4 @@ export default function IndustryDetail() {
     </Layout>
   );
 }
+

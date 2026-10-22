@@ -163,62 +163,28 @@ export default function CreativeHero() {
           scrollLength={1.2}
           interactive={true}
           annotations={false}
-          enterLabel="Explore Services"
+          enterLabel="Discuss your priorities"
           background={
-            <div
-              className="absolute inset-0 z-0 bg-cream"
-              style={{ backgroundColor: "hsl(var(--cream))" }}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover z-0"
+              src="/Oworks Portfolio_SV.mp4"
             />
           }
           front={
             <>
-              <p data-sublime-eyebrow>Creative Excellence</p>
+              <p data-sublime-eyebrow>Healthcare branding, marketing and experience</p>
               <p data-sublime-support>
-                Step into a new dimension of digital experiences.
+                Based in Bengaluru. Working across Kalyan Karnataka.
               </p>
             </>
           }
         >
           <div className="portal-inner-content">
-            <div data-slipstream-copy>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="uppercase tracking-[0.2em] text-sm font-semibold mb-[-2rem]"
-                style={{ color: "hsl(var(--ink-muted))" }}
-              >
-                Welcome to the Future
-              </motion.p>
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.1,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-              >
-                Do it Right, with oworks!
-              </motion.h1>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.2,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                data-slipstream-features
-              >
-                <Link to="/services" className="btn-portal-primary">
-                  What we do
-                </Link>
-                <Link to="/about" className="btn-portal-outline">
-                  About Us
-                </Link>
-              </motion.div>
-            </div>
+            {/* The user requested to remove the text and just have the video */}
           </div>
         </GlyphPortal>
       ) : (

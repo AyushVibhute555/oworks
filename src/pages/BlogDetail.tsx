@@ -20,7 +20,7 @@ export default function BlogDetail() {
     <Layout>
       {/* Article Header */}
       <section className="pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
               <div className="flex items-center justify-center gap-4 mb-6">
@@ -59,7 +59,7 @@ export default function BlogDetail() {
 
       {/* Content */}
       <section className="pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+        <div className="container-editorial">
           <div className="max-w-3xl mx-auto prose prose-lg md:prose-xl prose-stone">
             <ScrollReveal>
               <p className="text-ink-light leading-relaxed">{post.content}</p>
@@ -74,7 +74,7 @@ export default function BlogDetail() {
           to={`/blog/${nextPost.slug}`}
           className="group block"
         >
-          <div className="container-editorial px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="container-editorial py-16 md:py-24">
             <div className="flex items-center justify-between">
               <div>
                 <p className="eyebrow mb-4">Next Article</p>
@@ -94,7 +94,7 @@ export default function BlogDetail() {
 
       {/* Back Link */}
       <section className="bg-cream-dark border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 py-8">
+        <div className="container-editorial py-8">
           <Link 
             to="/blog" 
             className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors duration-300"
@@ -107,3 +107,4 @@ export default function BlogDetail() {
     </Layout>
   );
 }
+

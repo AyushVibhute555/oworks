@@ -129,7 +129,7 @@ export function InvestmentEstimator() {
 
   return (
     <section className="section-padding bg-cream-dark">
-      <div className="container-editorial px-6 md:px-12 lg:px-20">
+      <div className="container-editorial">
         <div className="max-w-4xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-12 md:mb-16">
@@ -266,3 +266,4 @@ export function InvestmentEstimator() {
     </section>
   );
 }
+

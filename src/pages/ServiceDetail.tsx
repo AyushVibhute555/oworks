@@ -1,15 +1,15 @@
 import { useParams, Link, Navigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, HelpCircle } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { services } from "@/data/services";
 
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
-  
+
   const serviceIndex = services.findIndex((s) => s.slug === slug);
   const service = services[serviceIndex];
-  
+
   if (!service) {
     return <Navigate to="/services" replace />;
   }
@@ -18,128 +18,157 @@ export default function ServiceDetail() {
 
   return (
     <Layout>
-      {/* Hero Image */}
-      <section className="pt-24 md:pt-32">
-        <div className="w-full">
-          <ScrollReveal>
-            <div className="aspect-[16/9] md:aspect-[21/9] bg-cream overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=2000"
-                alt={`Placeholder — ${service.name} hero image, to be replaced`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </ScrollReveal>
+      {/* Hero Header */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-cream-dark">
+        <div className="container-editorial">
+          <div className="max-w-4xl">
+            <ScrollReveal>
+              <p className="eyebrow mb-6">{service.name}</p>
+              <h1 className="font-serif text-5xl md:text-7xl text-ink leading-[1.1] mb-8">
+                {service.heading}
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-xl md:text-2xl text-ink-light leading-relaxed max-w-3xl">
+                {service.intro}
+              </p>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* Service Info */}
-      <section className="section-padding">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            {/* Main Content */}
-            <div className="lg:col-span-8">
-              <ScrollReveal>
-                <p className="eyebrow mb-4">{service.category}</p>
-              </ScrollReveal>
-              <ScrollReveal delay={100}>
-                <h1 className="font-serif text-4xl md:text-5xl text-ink mb-8">
-                  {service.heading}
-                </h1>
-              </ScrollReveal>
-              <ScrollReveal delay={200}>
-                <p className="text-xl text-ink-light leading-relaxed mb-12">
-                  {service.intro}
-                </p>
-              </ScrollReveal>
+      {/* Main Content */}
+      <section className="py-20 md:py-32 bg-white">
+        <div className="container-editorial">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
 
-              {/* Process Section */}
-              {service.process && (
-                <ScrollReveal delay={300}>
-                  <div className="mb-12">
-                    <h2 className="font-serif text-3xl text-ink mb-6">
-                      {service.processHeading || "Our Process"}
+            {/* Details */}
+            <div className="lg:col-span-7">
+
+              {/* Sections (New Schema) */}
+              {service.sections && (
+                <ScrollReveal>
+                  <div className="mb-20 space-y-16">
+                    {service.sections.map((section, idx) => (
+                      <div key={idx}>
+                        <h2 className="font-serif text-3xl md:text-4xl text-ink mb-6">
+                          {section.heading}
+                        </h2>
+                        <p className="text-lg text-ink-light leading-relaxed">
+                          {section.body}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollReveal>
+              )}
+
+              {/* Process Section (Fallback for older schema, if sections not present but process is) */}
+              {!service.sections && service.process && (
+                <ScrollReveal>
+                  <div className="mb-20">
+                    <h2 className="font-serif text-3xl md:text-4xl text-ink mb-10">
+                      {service.processHeading || "Our Approach"}
                     </h2>
                     {Array.isArray(service.process) ? (
-                      <div className="space-y-6">
+                      <div className="space-y-10">
                         {service.process.map((step, idx) => (
-                          <div key={idx}>
-                            {typeof step === 'string' ? (
-                              <p className="text-ink-light">{step}</p>
-                            ) : (
-                              <div>
-                                <p className="eyebrow mb-2">{step.title}</p>
-                                <p className="text-ink-light">{step.text}</p>
-                              </div>
-                            )}
+                          <div key={idx} className="flex gap-6 border-t border-divider pt-6">
+                            <div className="text-ink/20 font-serif text-2xl italic mt-1">
+                              0{idx + 1}
+                            </div>
+                            <div>
+                              {typeof step === 'string' ? (
+                                <p className="text-lg text-ink-light leading-relaxed">{step}</p>
+                              ) : (
+                                <div>
+                                  <h3 className="font-serif text-2xl text-ink mb-3">{step.title}</h3>
+                                  <p className="text-lg text-ink-light leading-relaxed">{step.text}</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-ink-light">{service.process}</p>
+                      <p className="text-lg text-ink-light leading-relaxed">{service.process}</p>
                     )}
                   </div>
                 </ScrollReveal>
               )}
 
-              {/* Merchandise specific */}
-              {service.merchandiseOfferings && (
-                <ScrollReveal delay={400}>
-                  <div className="mb-12">
-                    <h2 className="font-serif text-3xl text-ink mb-6">Our Merchandise Offerings</h2>
-                    <ul className="space-y-3 list-disc pl-5">
-                      {service.merchandiseOfferings.map((offering, idx) => (
-                        <li key={idx} className="text-ink-light">{offering}</li>
+              {/* Scope List */}
+              {service.scopeList && (
+                <ScrollReveal delay={100}>
+                  <div className="mb-20 bg-cream-dark p-10 md:p-12 border border-divider">
+                    <h2 className="font-serif text-3xl text-ink mb-8">Scope of work</h2>
+                    <ul className="space-y-4">
+                      {service.scopeList.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-4 text-lg text-ink-light">
+                          <Check className="w-6 h-6 text-ink shrink-0" strokeWidth={1.5} />
+                          <span>{item}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 </ScrollReveal>
               )}
 
-              {/* Why It Matters */}
-              {service.whyItMatters && (
-                <ScrollReveal delay={400}>
-                  <div className="mb-12">
-                    <h2 className="font-serif text-3xl text-ink mb-6">
-                      {service.whyItMattersHeading || "Why It Matters"}
+              {/* Project Line / Pricing */}
+              {service.projectLine && (
+                <ScrollReveal delay={100}>
+                  <div className="mb-20 p-8 border border-ink/10 bg-white shadow-sm">
+                    <p className="text-lg text-ink font-medium leading-relaxed">
+                      {service.projectLine}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              )}
+
+              {/* FAQ Section */}
+              {service.faq && service.faq.length > 0 && (
+                <ScrollReveal delay={150}>
+                  <div className="mb-20">
+                    <h2 className="font-serif text-3xl text-ink mb-8 flex items-center gap-3">
+                      <HelpCircle className="w-8 h-8 text-ink-light" strokeWidth={1.5} />
+                      Common questions
                     </h2>
-                    {Array.isArray(service.whyItMatters) ? (
-                      <div className="space-y-6">
-                        {service.whyItMatters.map((item, idx) => (
-                          <div key={idx}>
-                            <p className="font-medium text-ink mb-2">{item.title}</p>
-                            <p className="text-ink-light">{item.text}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-ink-light">{service.whyItMatters}</p>
-                    )}
+                    <div className="space-y-8">
+                      {service.faq.map((faq, idx) => (
+                        <div key={idx} className="border-b border-divider pb-8 last:border-0 last:pb-0">
+                          <h3 className="text-xl font-serif text-ink mb-3">{faq.question}</h3>
+                          <p className="text-lg text-ink-light leading-relaxed">"{faq.answer}"</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </ScrollReveal>
               )}
 
               {/* Related Link */}
               {service.relatedLink && (
-                <ScrollReveal delay={500}>
-                  <Link to={service.relatedLink.url} className="text-ink font-medium hover:opacity-70 transition-opacity underline underline-offset-4">
-                    {service.relatedLink.label}
+                <ScrollReveal delay={200}>
+                  <Link to={service.relatedLink.url} className="text-ink font-medium hover:text-ink-light transition-colors inline-flex items-center gap-2 text-lg">
+                    {service.relatedLink.label} <ArrowRight className="w-5 h-5" />
                   </Link>
                 </ScrollReveal>
               )}
             </div>
 
-            {/* Sidebar / Supporting Image */}
-            <div className="lg:col-span-4">
-              <ScrollReveal delay={300}>
-                <div className="lg:sticky lg:top-32 space-y-8">
-                  <div className="aspect-[4/5] bg-cream overflow-hidden">
-                     <img
-                      src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800"
-                      alt={`Placeholder — ${service.name} supporting image, to be replaced`}
-                      className="w-full h-full object-cover"
+            {/* Sidebar Image */}
+            <div className="lg:col-span-5">
+              <ScrollReveal delay={200}>
+                <div className="lg:sticky lg:top-32">
+                  <div className="aspect-[4/5] bg-cream overflow-hidden border border-divider">
+                    <img
+                      src={`https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800&sig=${serviceIndex}`}
+                      alt={`${service.name} execution example`}
+                      className="w-full h-full object-cover grayscale opacity-90 hover:grayscale-0 transition-all duration-1000"
                     />
                   </div>
+                  <p className="text-sm text-ink-muted mt-4 text-center">
+                    Proof of work available on request.
+                  </p>
                 </div>
               </ScrollReveal>
             </div>
@@ -148,56 +177,59 @@ export default function ServiceDetail() {
       </section>
 
       {/* Let's Get Started CTA */}
-      <section className="bg-cream-dark py-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
+      <section className="bg-ink py-24 md:py-32">
+        <div className="container-editorial text-center">
           <ScrollReveal>
-            <h2 className="font-serif text-3xl md:text-5xl text-ink mb-6">Ready to take your brand to the next level?</h2>
-            <p className="text-lg text-ink-muted max-w-2xl mx-auto mb-10">
-              Our expert team is here to craft the perfect creative marketing campaign for you.
+            <h2 className="font-serif text-4xl md:text-5xl text-cream mb-6">Let us review your {service.name.toLowerCase()}.</h2>
+            <p className="text-xl text-cream-dark opacity-80 max-w-2xl mx-auto mb-12">
+              Start with your priority. We will define the scope and the people needed to deliver it.
             </p>
-            <Link to="/contact" className="btn-primary inline-flex">
-              Connect with Us
+            <Link to={`/contact?reason=${encodeURIComponent(service.name)}`} className="btn-primary bg-white text-ink hover:bg-cream inline-flex px-12 py-5 text-lg">
+              {service.actionLabel || "Discuss this capability"}
             </Link>
           </ScrollReveal>
         </div>
       </section>
 
       {/* Next Service */}
-      <section className="border-t border-divider">
-        <Link 
+      <section className="border-t border-divider bg-cream-dark">
+        <Link
           to={`/services/${nextService.slug}`}
           className="group block"
         >
-          <div className="container-editorial px-6 md:px-12 lg:px-20 py-16 md:py-24">
+          <div className="container-editorial py-20 md:py-28">
             <div className="flex items-center justify-between">
               <div>
-                <p className="eyebrow mb-4">Next Service</p>
-                <h2 className="font-serif text-3xl md:text-4xl text-ink group-hover:opacity-70 transition-opacity duration-300">
+                <p className="eyebrow mb-6 text-ink-light">Next Capability</p>
+                <h2 className="font-serif text-4xl md:text-5xl text-ink group-hover:text-ink-light transition-colors duration-500">
                   {nextService.name}
                 </h2>
               </div>
-              <ArrowRight 
-                size={32} 
-                strokeWidth={1} 
-                className="text-ink transition-transform duration-300 group-hover:translate-x-2" 
-              />
+              <div className="w-16 h-16 rounded-full border border-ink flex items-center justify-center group-hover:bg-ink transition-colors duration-500 shrink-0">
+                <ArrowRight
+                  size={24}
+                  strokeWidth={1.5}
+                  className="text-ink group-hover:text-white transition-colors duration-500"
+                />
+              </div>
             </div>
           </div>
         </Link>
       </section>
 
       {/* Back Link */}
-      <section className="bg-cream-dark border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 py-8">
-          <Link 
-            to="/services" 
-            className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors duration-300"
+      <section className="bg-white border-t border-divider">
+        <div className="container-editorial py-10">
+          <Link
+            to="/services"
+            className="inline-flex items-center gap-3 text-ink-light hover:text-ink transition-colors duration-300 font-medium"
           >
-            <ArrowLeft size={16} strokeWidth={1.5} />
-            Back to all services
+            <ArrowLeft size={20} strokeWidth={1.5} />
+            Back to all capabilities
           </Link>
         </div>
       </section>
     </Layout>
   );
 }
+

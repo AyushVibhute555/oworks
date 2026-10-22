@@ -1,112 +1,131 @@
 import { Link } from "react-router-dom";
+import { ArrowRight, MapPin, Users, Target } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
-
-const skills = [
-  {
-    category: "Strategy",
-    items: ["Brand Identity", "Brand Strategy", "Inbound Marketing", "Creative Consulting", "Advertising", "Internal Branding"]
-  },
-  {
-    category: "Execution",
-    items: ["UX & UI Design", "Web Design", "Content Creation", "Copywriting", "External Branding", "Print works"]
-  },
-  {
-    category: "Operations",
-    items: ["Creative Consulting", "Marketing Operations", "Digital Infrastructure", "Campaign Management", "Content Production", "Interior Design Consulting"]
-  },
-  {
-    category: "Growth",
-    items: ["Performance Marketing", "User Acquisition", "Content Optimization", "Market Research", "User Research", "Competitor Research"]
-  }
-];
 
 export default function About() {
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
-          <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-cream-dark">
+        <div className="container-editorial">
+          <div className="max-w-4xl">
             <ScrollReveal>
-              <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-ink leading-tight mb-8">
-                Original, Wise,<br />Reliable, Swift
+              <h1 className="font-serif text-5xl md:text-7xl text-ink leading-[1.1] mb-8">
+                Built for healthcare.
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl md:text-2xl text-ink-light leading-relaxed">
-                Discover who we are at Oworks. Learn about our mission, values, and the passionate team behind our innovative marketing solutions.
+              <p className="text-xl md:text-2xl text-ink-light leading-relaxed max-w-3xl">
+                Oworks was started to bring clarity to healthcare marketing. Since 2019, we have helped hospitals, specialists and healthtech businesses build brands that people understand and trust.
               </p>
             </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* The Story */}
-      <section className="section-padding bg-cream-dark">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
-          <div className="max-w-3xl mx-auto text-center">
+      {/* Main Content Sections */}
+      <section className="py-20 md:py-32 bg-white">
+        <div className="container-editorial">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32 mb-32">
+            
+            {/* Two bases */}
             <ScrollReveal>
-              <h2 className="font-serif text-4xl md:text-5xl text-ink mb-10">The Story!!</h2>
+              <div className="h-full flex flex-col justify-center">
+                <MapPin className="w-8 h-8 text-ink-light mb-8" strokeWidth={1.5} />
+                <h2 className="text-3xl md:text-4xl font-serif text-ink mb-6">Two bases, one standard.</h2>
+                <p className="text-xl text-ink-light leading-relaxed mb-8">
+                  We work from Bengaluru, with a scheduled production circuit covering Kalaburagi and Kalyan Karnataka. This means you get city-standard production with an understanding of regional audiences.
+                </p>
+                <p className="text-lg text-ink-muted leading-relaxed">
+                  We also accept remote brand and editing briefs globally, handling logistics, language review and market-specific requirements seamlessly.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={100}>
+              <div className="aspect-[4/5] bg-cream overflow-hidden border border-divider">
+                <img 
+                  src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&q=80&w=1000" 
+                  alt="Bengaluru office location" 
+                  className="w-full h-full object-cover grayscale opacity-90"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32">
+            {/* Team Image */}
+            <ScrollReveal>
+              <div className="aspect-[4/5] bg-cream overflow-hidden border border-divider order-2 md:order-1">
+                <img 
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000" 
+                  alt="Oworks team working together" 
+                  className="w-full h-full object-cover grayscale opacity-90"
+                />
+              </div>
+            </ScrollReveal>
+
+            {/* The right people */}
+            <ScrollReveal delay={100}>
+              <div className="h-full flex flex-col justify-center order-1 md:order-2">
+                <Users className="w-8 h-8 text-ink-light mb-8" strokeWidth={1.5} />
+                <h2 className="text-3xl md:text-4xl font-serif text-ink mb-6">The right people for the brief.</h2>
+                <p className="text-xl text-ink-light leading-relaxed mb-8">
+                  We keep our core team small and accountable. You work directly with the strategists and creators making your brand.
+                </p>
+                <p className="text-lg text-ink-muted leading-relaxed">
+                  When a brief requires it, we bring in specialist partners for technical interiors, custom development and large-scale video production, while remaining your single point of coordination.
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Stat Bar (Optional but looks premium) */}
+      <section className="py-16 bg-cream border-y border-divider">
+        <div className="container-editorial">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <ScrollReveal>
+              <div>
+                <p className="text-4xl font-serif text-ink mb-2">2019</p>
+                <p className="text-sm uppercase tracking-widest text-ink-muted">Established</p>
+              </div>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl text-ink-light leading-relaxed mb-16">
-                oworks was founded in 2012. We operate with a core team of 15 people and work with a large pool of creative agencies across the globe. We compose a unique team for each project to provide flexible talent specializing in creative concepts, management, and technology anywhere in the world.
-              </p>
+              <div>
+                <p className="text-4xl font-serif text-ink mb-2">02</p>
+                <p className="text-sm uppercase tracking-widest text-ink-muted">Studio Bases</p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={200}>
+              <div>
+                <p className="text-4xl font-serif text-ink mb-2">100+</p>
+                <p className="text-sm uppercase tracking-widest text-ink-muted">Films Produced</p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={300}>
+              <div>
+                <p className="text-4xl font-serif text-ink mb-2">100%</p>
+                <p className="text-sm uppercase tracking-widest text-ink-muted">Healthcare Focus</p>
+              </div>
             </ScrollReveal>
           </div>
-
-          <ScrollReveal delay={200}>
-            <div className="aspect-[21/9] md:aspect-[24/9] bg-cream overflow-hidden mt-8 relative rounded-sm">
-              <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2000"
-                alt="Placeholder — team photo / office image, to be replaced"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-ink/10"></div>
-              <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 text-sm font-medium">
-                Team photo placeholder — replace
-              </div>
-            </div>
-          </ScrollReveal>
         </div>
       </section>
 
-      {/* Our Skills */}
-      <section className="section-padding">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
+      {/* CTA */}
+      <section className="py-24 md:py-32 bg-ink text-cream text-center">
+        <div className="container-editorial">
           <ScrollReveal>
-            <h2 className="font-serif text-4xl md:text-5xl text-ink mb-16 text-center">Our Skills</h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-            {skills.map((skillGroup, index) => (
-              <ScrollReveal key={skillGroup.category} delay={index * 100}>
-                <div className="p-8 border border-divider h-full">
-                  <h3 className="font-serif text-2xl text-ink mb-6 pb-4 border-b border-divider">{skillGroup.category}</h3>
-                  <ul className="space-y-4">
-                    {skillGroup.items.map((item, idx) => (
-                      <li key={idx} className="flex flex-wrap">
-                        <span className="inline-block bg-cream-dark px-3 py-1 rounded-full text-sm text-ink-light whitespace-nowrap">
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="bg-cream-dark py-24 border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
-          <ScrollReveal>
-            <h2 className="font-serif text-3xl md:text-5xl text-ink mb-10">Ready to start your journey?</h2>
-            <Link to="/contact" className="btn-primary inline-flex">
-              Connect with Us
+            <Target className="w-12 h-12 text-cream/50 mx-auto mb-8" strokeWidth={1} />
+            <h2 className="text-4xl md:text-5xl font-serif mb-6">Bring clarity to your healthcare brand.</h2>
+            <p className="text-xl text-cream-dark opacity-80 mb-12 max-w-2xl mx-auto">
+              Our team is ready to plan, produce and coordinate your next communication priority.
+            </p>
+            <Link to="/contact" className="btn-primary bg-white text-ink hover:bg-cream inline-flex px-12 py-5 text-lg">
+              Work with us
             </Link>
           </ScrollReveal>
         </div>
@@ -114,3 +133,4 @@ export default function About() {
     </Layout>
   );
 }
+

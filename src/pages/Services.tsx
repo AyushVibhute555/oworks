@@ -1,118 +1,95 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { services } from "@/data/services";
 
 export default function Services() {
-  // Group services by category
-  const groupedServices = services.reduce((acc, service) => {
-    if (!acc[service.category]) {
-      acc[service.category] = [];
-    }
-    acc[service.category].push(service);
-    return acc;
-  }, {} as Record<string, typeof services>);
-
-  // Maintain order of categories as requested
-  const categories = [
-    "Creative and Content",
-    "Research and Analysis",
-    "Web Development",
-    "Distribution"
-  ];
-
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-cream-dark">
+        <div className="container-editorial text-center">
           <div className="max-w-4xl mx-auto">
             <ScrollReveal>
-              <h1 className="font-serif text-5xl md:text-7xl text-ink mb-8">
-                Our Services
+              <h1 className="font-serif text-5xl md:text-7xl text-ink leading-[1.1] mb-8">
+                Healthcare communication, brought together.
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={100}>
               <p className="text-xl md:text-2xl text-ink-light leading-relaxed">
-                We offer marketing services that help brands and businesses expand into new markets. Our strategies are built on proven insights, delivering success every time. With a mix of creativity and the latest technology, we're here to help you achieve your goals, whether they're local or global.
+                Your brand, films, website and physical touchpoints should work towards the same goal. We begin with your priorities, then build the right mix of support around them.
               </p>
             </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* Services Categories */}
-      <section className="section-padding bg-cream-dark border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20">
-          <div className="space-y-24 md:space-y-32">
-            {categories.map((category, index) => {
-              const categoryServices = groupedServices[category] || [];
-              if (categoryServices.length === 0) return null;
-
-              const isEven = index % 2 === 0;
-
-              return (
-                <div key={category} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                  
-                  {/* Image Column */}
-                  <div className={`lg:col-span-5 ${isEven ? 'order-1' : 'order-1 lg:order-2'}`}>
-                    <ScrollReveal>
-                      <div className="aspect-[4/5] bg-cream overflow-hidden">
-                        <img
-                          src={`https://images.unsplash.com/photo-1542744094-24638ea0b56c?auto=format&fit=crop&q=80&w=800&sig=${index}`}
-                          alt={`Placeholder — ${category} category image, to be replaced`}
-                          className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+      {/* Services List */}
+      <section className="py-20 md:py-32 bg-white border-t border-divider">
+        <div className="container-editorial">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+            {services.map((service, index) => (
+              <ScrollReveal key={service.slug} delay={index * 100}>
+                <Link
+                  to={`/services/${service.slug}`}
+                  className="group block h-full p-10 bg-cream-dark border border-divider hover:bg-ink transition-colors duration-500"
+                >
+                  <div className="flex flex-col h-full">
+                    <div className="mb-auto">
+                      <p className="eyebrow mb-6 text-ink-light group-hover:text-cream/70 transition-colors">Capability 0{index + 1}</p>
+                      <h2 className="font-serif text-3xl md:text-4xl text-ink mb-6 group-hover:text-cream transition-colors duration-500">
+                        {service.name}
+                      </h2>
+                      <p className="text-lg text-ink-light leading-relaxed group-hover:text-cream/90 transition-colors duration-500">
+                        {service.intro}
+                      </p>
+                    </div>
+                    
+                    <div className="mt-12 flex items-center justify-between border-t border-divider group-hover:border-cream/20 pt-6 transition-colors duration-500">
+                      <span className="text-sm uppercase tracking-widest font-medium text-ink group-hover:text-cream transition-colors">
+                        View scope
+                      </span>
+                      <div className="w-12 h-12 rounded-full border border-ink flex items-center justify-center group-hover:border-cream group-hover:bg-cream transition-all duration-500">
+                        <ArrowRight
+                          size={20}
+                          strokeWidth={1.5}
+                          className="text-ink group-hover:text-ink transition-colors"
                         />
                       </div>
-                    </ScrollReveal>
-                  </div>
-
-                  {/* Content Column */}
-                  <div className={`lg:col-span-7 ${isEven ? 'order-2' : 'order-2 lg:order-1'}`}>
-                    <ScrollReveal>
-                      <h2 className="font-serif text-4xl md:text-5xl text-ink mb-10 pb-6 border-b border-divider">
-                        {category}
-                      </h2>
-                    </ScrollReveal>
-                    <div className="space-y-6">
-                      {categoryServices.map((service, sIndex) => (
-                        <ScrollReveal key={service.slug} delay={sIndex * 100}>
-                          <Link 
-                            to={`/services/${service.slug}`}
-                            className="group block p-6 border border-divider hover:bg-white transition-colors duration-300"
-                          >
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-serif text-2xl text-ink group-hover:text-ink-light transition-colors">
-                                {service.name}
-                              </h3>
-                              <svg 
-                                className="w-6 h-6 text-ink transform transition-transform duration-300 group-hover:translate-x-2" 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                stroke="currentColor"
-                              >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                              </svg>
-                            </div>
-                          </Link>
-                        </ScrollReveal>
-                      ))}
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                </Link>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="bg-cream py-24 border-t border-divider">
-        <div className="container-editorial px-6 md:px-12 lg:px-20 text-center">
+      {/* Additional Projects Info */}
+      <section className="py-20 bg-cream-dark border-t border-divider">
+        <div className="container-editorial">
           <ScrollReveal>
-            <h2 className="font-serif text-3xl md:text-5xl text-ink mb-10">Ready to expand your reach?</h2>
-            <Link to="/contact" className="btn-primary inline-flex">
-              Connect with Us
+            <div className="max-w-3xl mx-auto text-center">
+              <h3 className="font-serif text-3xl text-ink mb-6">Additional projects</h3>
+              <p className="text-xl text-ink-light leading-relaxed">
+                Launch communication, professional events, podcast production and PR can be scoped around your brief, with the appropriate specialists.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="bg-ink py-24 md:py-32 text-center">
+        <div className="container-editorial">
+          <ScrollReveal>
+            <h2 className="font-serif text-4xl md:text-5xl text-cream mb-6">Start with your priority.</h2>
+            <p className="text-xl text-cream-dark opacity-80 max-w-2xl mx-auto mb-12">
+              We will define the scope and the people needed to deliver it.
+            </p>
+            <Link to="/contact" className="btn-primary bg-white text-ink hover:bg-cream inline-flex px-12 py-5 text-lg">
+              Discuss your priorities
             </Link>
           </ScrollReveal>
         </div>
@@ -120,3 +97,4 @@ export default function Services() {
     </Layout>
   );
 }
+

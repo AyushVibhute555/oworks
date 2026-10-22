@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 
 const navLinks = [
   { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: "Services", path: "/services" },
+  { name: "Partnerships", path: "/partnerships" },
   { name: "About", path: "/about" },
-  { name: "Blog", path: "/blog" },
-  { name: "Contact Us", path: "/contact" },
+  { name: "Discuss your priorities", path: "/contact" },
 ];
 
 const socialLinks = [
@@ -13,12 +15,19 @@ const socialLinks = [
   { name: "LinkedIn", url: "#" },
 ];
 
+const companyLinks = [
+  { name: "Insights", path: "/insights" },
+  { name: "Careers", path: "/careers" },
+  { name: "Privacy Notice", path: "/privacy" },
+  { name: "Terms of Service", path: "/terms" },
+];
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-cream-dark border-t border-divider">
-      <div className="container-editorial px-6 md:px-12 lg:px-20 py-16 md:py-20">
+      <div className="container-editorial py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           {/* Logo & Tagline */}
           <div className="md:col-span-4">
@@ -52,8 +61,25 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Company */}
+          <div className="md:col-span-2">
+            <h4 className="eyebrow mb-4">Company</h4>
+            <ul className="space-y-3">
+              {companyLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.path}
+                    className="text-sm text-ink-light transition-colors duration-300 hover:text-ink"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Social */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <h4 className="eyebrow mb-4">Connect</h4>
             <ul className="space-y-3">
               {socialLinks.map((link) => (
@@ -85,3 +111,4 @@ export function Footer() {
     </footer>
   );
 }
+
