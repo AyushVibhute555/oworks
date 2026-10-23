@@ -145,144 +145,112 @@ export default function StickyContentWrapper({
     activeImageScale = 1.1,
     exitImageScale = 1,
 }: StickyContentCompProps) {
-    const desktopContainerRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const stickyRef = useRef<HTMLDivElement | null>(null);
     const contentRefsRef = useRef<(HTMLDivElement | null)[]>([]);
     const imageRefsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     useLayoutEffect(() => {
-        if (!desktopContainerRef.current || !stickyRef.current || !items.length) return;
+        if (!containerRef.current || !stickyRef.current || !items.length) return;
 
-        // Use GSAP MatchMedia to ONLY apply complex animations on Desktop
-        const mm = gsap.matchMedia();
+        const reducedMotion = prefersReducedMotion();
+        const contents = contentRefsRef.current;
+        const images = imageRefsRef.current;
 
-        mm.add("(min-width: 1024px)", () => {
-            const reducedMotion = prefersReducedMotion();
-            const contents = contentRefsRef.current;
-            const images = imageRefsRef.current;
-
-            contents.forEach((content, index) => {
-                gsap.set(content, {
-                    autoAlpha: index === 0 ? 1 : 0,
-                    yPercent: index === 0 ? 0 : contentEnterYPercent,
-                    zIndex: items.length - index,
-                });
+        contents.forEach((content, index) => {
+            gsap.set(content, {
+                autoAlpha: index === 0 ? 1 : 0,
+                yPercent: index === 0 ? 0 : contentEnterYPercent,
+                zIndex: items.length - index,
             });
-
-            images.forEach((image, index) => {
-                gsap.set(image, {
-                    autoAlpha: reducedMotion ? (index === 0 ? 1 : 0) : 1,
-                    zIndex: items.length - index,
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    scale: reducedMotion ? 1 : enableImageScaleFlow ? (index === 0 ? activeImageScale : initialImageScale) : 1,
-                    transformOrigin: "center center",
-                });
-            });
-
-            const totalTimelineDuration = items.length > 1
-                ? ((items.length - 2) * stepGap) + contentTransitionDuration + contentDelay
-                : 1;
-            const snapValues = items.length > 1 ? Array.from({ length: items.length }, (_, index) => index / (items.length - 1)) : [0];
-
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: desktopContainerRef.current,
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1,
-                    snap: (items.length > 1 ? {
-                        snapTo: snapValues,
-                        duration: { min: 0.2, max: 0.5 },
-                        ease: "power2.inOut",
-                        delay: 0,
-                    } : false) as any,
-                },
-            });
-
-            items.forEach((_, index) => {
-                if (index === items.length - 1) return;
-
-                const currentContent = contents[index];
-                const nextContent = contents[index + 1];
-                const currentImage = images[index];
-                const nextImage = images[index + 1];
-                const stepStart = index * stepGap;
-                const nextContentStart = stepStart + contentTransitionDuration + contentDelay;
-
-                timeline
-                    .to(currentContent, { autoAlpha: 0, yPercent: contentExitYPercent, duration: contentTransitionDuration, ease: "power2.inOut" }, stepStart)
-                    .fromTo(nextContent, { autoAlpha: 0, yPercent: contentEnterYPercent }, { autoAlpha: 1, yPercent: 0, duration: contentTransitionDuration, ease: "power2.inOut" }, nextContentStart)
-                    .to(currentImage, reducedMotion ? { autoAlpha: 0, duration: stepGap, ease: "none" } : { clipPath: "inset(0% 0% 100% 0%)", scale: enableImageScaleFlow ? exitImageScale : 1, duration: stepGap, ease: "none" }, stepStart);
-
-                if (reducedMotion) {
-                    timeline.to(nextImage, { autoAlpha: 1, duration: stepGap, ease: "none" }, stepStart);
-                } else if (enableImageScaleFlow) {
-                    timeline.to(nextImage, { scale: activeImageScale, duration: stepGap, ease: "none" }, stepStart);
-                }
-            });
-
-            timeline.duration(totalTimelineDuration);
-            ScrollTrigger.refresh();
         });
 
-        return () => mm.revert();
+        images.forEach((image, index) => {
+            gsap.set(image, {
+                autoAlpha: reducedMotion ? (index === 0 ? 1 : 0) : 1,
+                zIndex: items.length - index,
+                clipPath: "inset(0% 0% 0% 0%)",
+                scale: reducedMotion ? 1 : enableImageScaleFlow ? (index === 0 ? activeImageScale : initialImageScale) : 1,
+                transformOrigin: "center center",
+            });
+        });
+
+        const totalTimelineDuration = items.length > 1
+            ? ((items.length - 2) * stepGap) + contentTransitionDuration + contentDelay
+            : 1;
+
+        const snapValues = items.length > 1 ? Array.from({ length: items.length }, (_, index) => index / (items.length - 1)) : [0];
+
+        const timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1,
+                snap: (items.length > 1 ? {
+                    snapTo: snapValues,
+                    duration: { min: 0.2, max: 0.5 },
+                    ease: "power2.inOut",
+                    delay: 0,
+                    inertia: false,
+                } : false) as any,
+            },
+        });
+
+        items.forEach((_, index) => {
+            if (index === items.length - 1) return;
+
+            const currentContent = contents[index];
+            const nextContent = contents[index + 1];
+            const currentImage = images[index];
+            const nextImage = images[index + 1];
+            const stepStart = index * stepGap;
+            const nextContentStart = stepStart + contentTransitionDuration + contentDelay;
+
+            timeline
+                .to(currentContent, { autoAlpha: 0, yPercent: contentExitYPercent, duration: contentTransitionDuration, ease: "power2.inOut" }, stepStart)
+                .fromTo(nextContent, { autoAlpha: 0, yPercent: contentEnterYPercent }, { autoAlpha: 1, yPercent: 0, duration: contentTransitionDuration, ease: "power2.inOut" }, nextContentStart)
+                .to(currentImage, reducedMotion ? { autoAlpha: 0, duration: stepGap, ease: "none" } : { clipPath: "inset(0% 0% 100% 0%)", scale: enableImageScaleFlow ? exitImageScale : 1, duration: stepGap, ease: "none" }, stepStart);
+
+            if (reducedMotion) {
+                timeline.to(nextImage, { autoAlpha: 1, duration: stepGap, ease: "none" }, stepStart);
+            } else if (enableImageScaleFlow) {
+                timeline.to(nextImage, { scale: activeImageScale, duration: stepGap, ease: "none" }, stepStart);
+            }
+        });
+
+        timeline.duration(totalTimelineDuration);
+        ScrollTrigger.refresh();
+
+        return () => {
+            timeline.kill();
+            ScrollTrigger.getAll().forEach(t => t.kill());
+        };
     }, [items, contentEnterYPercent, contentExitYPercent, contentTransitionDuration, contentDelay, stepGap, enableImageScaleFlow, initialImageScale, activeImageScale, exitImageScale]);
 
     if (!items.length) return null;
 
     return (
         <section className={`relative w-full ${className}`} style={bgColor ? { backgroundColor: bgColor } : undefined}>
-
-            {/* ========================================= */}
-            {/* MOBILE VIEW (Clean Native Scroll)         */}
-            {/* ========================================= */}
-            <div className="flex flex-col gap-16 py-12 lg:hidden">
-                {items.map((item, index) => (
-                    <div key={`mobile-item-${index}`} className="flex flex-col gap-8 px-[5vw]">
-                        {/* Image Box */}
-                        <div className={`relative w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-lg ${imageClassName}`}>
-                            <img
-                                src={item.image}
-                                alt={item.alt || item.imageAlt || `image-${index}`}
-                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                            />
-                        </div>
-
-                        {/* Content Box */}
-                        <div className={`flex flex-col ${contentClassName}`}>
-                            {renderStickyContent(item)}
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* ========================================= */}
-            {/* DESKTOP VIEW (Awwwards Sticky Animation)  */}
-            {/* ========================================= */}
             <div
-                ref={desktopContainerRef}
-                className="hidden lg:block w-full"
+                ref={containerRef}
+                className="w-full relative"
                 style={{ height: containerHeight || `${items.length * 100}vh` }}
             >
-                <div ref={stickyRef} className="sticky top-0 flex h-screen w-full items-center justify-between">
+                {/* Sticky wrapper */}
+                <div
+                    ref={stickyRef}
+                    className="sticky top-0 flex h-screen w-full flex-col lg:flex-row items-center justify-center lg:justify-between px-6 lg:px-0 pt-20 lg:pt-0 pb-10 lg:pb-0 gap-8 lg:gap-0 overflow-hidden"
+                >
 
-                    {/* Left Side: Text Content */}
-                    <div className={`relative h-full w-[45%] ${leftClassName}`}>
+                    {/* Image Side */}
+                    <div className={`relative order-1 h-[35vh] lg:h-[65vh] w-full lg:w-[50%] overflow-hidden rounded-2xl shadow-xl shrink-0 ${rightClassName}`}>
                         {items.map((item, index) => (
                             <div
-                                key={`content-${index}`}
-                                ref={(element) => { contentRefsRef.current[index] = element; }}
-                                className={`absolute inset-0 flex flex-col justify-center h-full w-full opacity-0 ${contentClassName}`}
+                                key={`image-${index}`}
+                                ref={(element) => { imageRefsRef.current[index] = element; }}
+                                className={`absolute inset-0 h-full w-full opacity-0 ${imageClassName}`}
                             >
-                                {renderStickyContent(item)}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Right Side: Image */}
-                    <div className={`relative h-[65vh] w-[50%] overflow-hidden rounded-2xl shadow-xl ${rightClassName}`}>
-                        {items.map((item, index) => (
-                            <div key={`image-${index}`} ref={(element) => { imageRefsRef.current[index] = element; }} className={`absolute inset-0 h-full w-full opacity-0 ${imageClassName}`}>
                                 <img
                                     src={item.image}
                                     alt={item.alt || item.imageAlt || `sticky-image-${index + 1}`}
@@ -293,9 +261,22 @@ export default function StickyContentWrapper({
                             </div>
                         ))}
                     </div>
+
+                    {/* Content Side */}
+                    <div className={`relative order-2 flex-1 min-h-0 w-full lg:h-full lg:w-[45%] lg:flex-none flex flex-col justify-start lg:justify-center ${leftClassName}`}>
+                        {items.map((item, index) => (
+                            <div
+                                key={`content-${index}`}
+                                ref={(element) => { contentRefsRef.current[index] = element; }}
+                                className={`absolute inset-0 flex flex-col justify-start lg:justify-center h-full w-full opacity-0 ${contentClassName}`}
+                            >
+                                {renderStickyContent(item)}
+                            </div>
+                        ))}
+                    </div>
+
                 </div>
             </div>
-
         </section>
     );
 }
