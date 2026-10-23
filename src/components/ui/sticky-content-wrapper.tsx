@@ -66,7 +66,6 @@ const renderStickyContent = (item: StickyContentItem) => {
     const link = getLink(item);
 
     return (
-        // FIX: Removed h-full so the parent's justify-center perfectly aligns the text with the image
         <div className="flex w-full flex-col justify-center text-ink">
             {item.heading && <h3 className="font-serif text-ink">{item.heading}</h3>}
 
@@ -146,16 +145,19 @@ export default function StickyContentWrapper({
     activeImageScale = 1.1,
     exitImageScale = 1,
 }: StickyContentCompProps) {
-    const sectionRef = useRef<HTMLElement | null>(null);
+    const desktopContainerRef = useRef<HTMLDivElement | null>(null);
     const stickyRef = useRef<HTMLDivElement | null>(null);
     const contentRefsRef = useRef<(HTMLDivElement | null)[]>([]);
     const imageRefsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     useLayoutEffect(() => {
-        if (!sectionRef.current || !stickyRef.current || !items.length) return;
+        if (!desktopContainerRef.current || !stickyRef.current || !items.length) return;
 
-        const reducedMotion = prefersReducedMotion();
-        const context = gsap.context(() => {
+        // Use GSAP MatchMedia to ONLY apply complex animations on Desktop
+        const mm = gsap.matchMedia();
+
+        mm.add("(min-width: 1024px)", () => {
+            const reducedMotion = prefersReducedMotion();
             const contents = contentRefsRef.current;
             const images = imageRefsRef.current;
 
@@ -177,12 +179,14 @@ export default function StickyContentWrapper({
                 });
             });
 
-            const totalTimelineDuration = Math.max(1, (items.length - 1) * stepGap);
+            const totalTimelineDuration = items.length > 1
+                ? ((items.length - 2) * stepGap) + contentTransitionDuration + contentDelay
+                : 1;
             const snapValues = items.length > 1 ? Array.from({ length: items.length }, (_, index) => index / (items.length - 1)) : [0];
 
             const timeline = gsap.timeline({
                 scrollTrigger: {
-                    trigger: sectionRef.current,
+                    trigger: desktopContainerRef.current,
                     start: "top top",
                     end: "bottom bottom",
                     scrub: 1,
@@ -219,39 +223,79 @@ export default function StickyContentWrapper({
 
             timeline.duration(totalTimelineDuration);
             ScrollTrigger.refresh();
-        }, sectionRef);
+        });
 
-        return () => context.revert();
+        return () => mm.revert();
     }, [items, contentEnterYPercent, contentExitYPercent, contentTransitionDuration, contentDelay, stepGap, enableImageScaleFlow, initialImageScale, activeImageScale, exitImageScale]);
 
     if (!items.length) return null;
 
     return (
-        <section ref={sectionRef} className={`relative flex w-full justify-between ${className}`} style={{ height: containerHeight || `${items.length * 100}vh`, ...(bgColor ? { backgroundColor: bgColor } : null) }}>
-            <div ref={stickyRef} className="sticky top-0 flex h-screen w-full items-center justify-between max-lg:h-screen max-lg:flex-col-reverse max-lg:justify-end">
+        <section className={`relative w-full ${className}`} style={bgColor ? { backgroundColor: bgColor } : undefined}>
 
-                {/* Left Side: Text Content */}
-                <div className={`relative h-full w-[45%] max-lg:h-[50%] max-lg:w-full ${leftClassName}`} style={bgColor ? { backgroundColor: bgColor } : undefined}>
-                    {items.map((item, index) => (
-                        <div
-                            key={`content-${index}`}
-                            ref={(element) => { contentRefsRef.current[index] = element; }}
-                            className={`absolute inset-0 flex flex-col justify-center h-full w-full opacity-0 max-lg:pt-8 ${contentClassName}`}
-                        >
+            {/* ========================================= */}
+            {/* MOBILE VIEW (Clean Native Scroll)         */}
+            {/* ========================================= */}
+            <div className="flex flex-col gap-16 py-12 lg:hidden">
+                {items.map((item, index) => (
+                    <div key={`mobile-item-${index}`} className="flex flex-col gap-8 px-[5vw]">
+                        {/* Image Box */}
+                        <div className={`relative w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-lg ${imageClassName}`}>
+                            <img
+                                src={item.image}
+                                alt={item.alt || item.imageAlt || `image-${index}`}
+                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                            />
+                        </div>
+
+                        {/* Content Box */}
+                        <div className={`flex flex-col ${contentClassName}`}>
                             {renderStickyContent(item)}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
 
-                {/* Right Side: Image */}
-                <div className={`relative h-[65vh] w-[50%] overflow-hidden rounded-2xl shadow-xl max-lg:mt-[10vh] max-lg:h-[40%] max-lg:w-full max-lg:rounded-xl ${rightClassName}`}>
-                    {items.map((item, index) => (
-                        <div key={`image-${index}`} ref={(element) => { imageRefsRef.current[index] = element; }} className={`absolute inset-0 h-full w-full opacity-0 ${imageClassName}`}>
-                            <img src={item.image} alt={item.alt || item.imageAlt || `sticky-image-${index + 1}`} className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-700" width={item.width || 1080} height={item.height || 1080} />
-                        </div>
-                    ))}
+            {/* ========================================= */}
+            {/* DESKTOP VIEW (Awwwards Sticky Animation)  */}
+            {/* ========================================= */}
+            <div
+                ref={desktopContainerRef}
+                className="hidden lg:block w-full"
+                style={{ height: containerHeight || `${items.length * 100}vh` }}
+            >
+                <div ref={stickyRef} className="sticky top-0 flex h-screen w-full items-center justify-between">
+
+                    {/* Left Side: Text Content */}
+                    <div className={`relative h-full w-[45%] ${leftClassName}`}>
+                        {items.map((item, index) => (
+                            <div
+                                key={`content-${index}`}
+                                ref={(element) => { contentRefsRef.current[index] = element; }}
+                                className={`absolute inset-0 flex flex-col justify-center h-full w-full opacity-0 ${contentClassName}`}
+                            >
+                                {renderStickyContent(item)}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Right Side: Image */}
+                    <div className={`relative h-[65vh] w-[50%] overflow-hidden rounded-2xl shadow-xl ${rightClassName}`}>
+                        {items.map((item, index) => (
+                            <div key={`image-${index}`} ref={(element) => { imageRefsRef.current[index] = element; }} className={`absolute inset-0 h-full w-full opacity-0 ${imageClassName}`}>
+                                <img
+                                    src={item.image}
+                                    alt={item.alt || item.imageAlt || `sticky-image-${index + 1}`}
+                                    className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                    width={item.width || 1080}
+                                    height={item.height || 1080}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
+
         </section>
     );
 }
