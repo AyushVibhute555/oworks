@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, PlayCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ReactLenis } from "lenis/react";
 import ChatBot from "react-chatbotify";
 
@@ -10,6 +10,9 @@ import CreativeHero from "@/components/ui/creative-hero";
 import { ClientMarquee } from "@/components/shared/ClientMarquee";
 import StickyContentWrapper from "@/components/ui/sticky-content-wrapper";
 import HorizontalFeatureReveal from "@/components/ui/horizontal-feature-reveal";
+
+// Import the separated chatbot logic
+import { chatbotSettings, chatbotFlow } from "@/lib/chatbot";
 
 // ─── Animation Variants ──────────────────────────────────────────────
 const staggerContainer = {
@@ -39,8 +42,7 @@ const ownerProblemItems = [
     no: "1",
     imgClass: "img-1",
     title: "A clear voice for your hospital.",
-    image:
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200",
     paragraphs: [
       "Your hospital needs a clear voice, but you need fewer things to chase.",
       "We bring your core priorities into focus, creating a unified message that resonates with patients and staff.",
@@ -57,8 +59,7 @@ const ownerProblemItems = [
     no: "2",
     imgClass: "img-2",
     title: "Production around your team.",
-    image:
-      "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=1200",
+    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=1200",
     paragraphs: [
       "Different vendors. Last-minute content. Repeated corrections.",
       "We replace the chaos by bringing people and production into one plan, scheduling around your clinical team's availability.",
@@ -75,8 +76,7 @@ const ownerProblemItems = [
     no: "3",
     imgClass: "img-3",
     title: "Clear scope and approvals.",
-    image:
-      "https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&q=80&w=1200",
+    image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&q=80&w=1200",
     paragraphs: [
       "We provide a dedicated coordinator who keeps the work moving.",
       "Every deliverable comes with a clear scope and a streamlined approval process, ensuring nothing gets lost in translation.",
@@ -94,155 +94,25 @@ const ownerProblemItems = [
 const serviceItems = [
   {
     heading: "Brand and marketing",
-    paragraph:
-      "Make your position clear. Bring your identity, campaigns and everyday communication into one direction.",
-    image:
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
+    paragraph: "Make your position clear. Bring your identity, campaigns and everyday communication into one direction.",
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
   },
   {
     heading: "Films and video",
-    paragraph:
-      "Explain expertise through doctor education, hospital stories and carefully planned production.",
-    image:
-      "https://images.unsplash.com/photo-1601506521937-0121a7ef2ed7?auto=format&fit=crop&q=80&w=800",
+    paragraph: "Explain expertise through doctor education, hospital stories and carefully planned production.",
+    image: "https://images.unsplash.com/photo-1601506521937-0121a7ef2ed7?auto=format&fit=crop&q=80&w=800",
   },
   {
     heading: "Websites and digital",
-    paragraph:
-      "Help people understand your services and take the next step through a clear website and coordinated digital presence.",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+    paragraph: "Help people understand your services and take the next step through a clear website and coordinated digital presence.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
   },
   {
     heading: "Spaces and essentials",
-    paragraph:
-      "Carry your brand into signage, print and staff essentials, with specialist partners for production and technical delivery.",
-    image:
-      "https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&q=80&w=800",
+    paragraph: "Carry your brand into signage, print and staff essentials, with specialist partners for production and technical delivery.",
+    image: "https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&q=80&w=800",
   },
 ];
-
-// ─── Chatbot Settings ────────────────────────────────────────────────
-const chatbotSettings = {
-  general: {
-    primaryColor: "#1A1A1A",
-    secondaryColor: "#FFFFFF",
-    fontFamily: "inherit",
-    showFooter: false,
-  },
-  header: {
-    title: "Agency Concierge",
-    showAvatar: false,
-  },
-  tooltip: {
-    mode: "START" as const,
-    text: "How can we help?",
-  },
-  chatButton: {
-    icon: "✦",
-  },
-};
-
-const chatbotFlow = {
-  start: {
-    message:
-      "Hello! Welcome to our healthcare branding agency. How can we help your hospital or practice today?",
-    options: ["Explore Services", "Pricing & Plans", "Contact Us"],
-    path: "process_options",
-  },
-  process_options: {
-    transition: { duration: 0 },
-    path: (params: any) => {
-      if (params.userInput === "Explore Services") return "services";
-      if (params.userInput === "Pricing & Plans") return "pricing";
-      if (params.userInput === "Contact Us") return "contact";
-      return "unknown";
-    },
-  },
-  services: {
-    message:
-      "We specialize in Brand & Marketing, Films & Video, and Websites & Digital presence tailored entirely for healthcare. What is your current priority?",
-    path: "contact",
-  },
-  pricing: {
-    message:
-      "Our dedicated partnerships start at ₹60,000/month for focused support, up to ₹1,20,000/month for full campaigns. Would you like to schedule a discovery call to compare scopes?",
-    options: ["Yes, Contact Us", "Back to Start"],
-    path: (params: any) =>
-      params.userInput === "Back to Start" ? "start" : "contact",
-  },
-  contact: {
-    message:
-      "Great! You can reach our team directly at hello@agency.com or visit our Contact page to set up a quick meeting. We look forward to hearing from you!",
-    options: ["Back to Start"],
-    path: "start",
-  },
-  unknown: {
-    message:
-      "Sorry, I didn't quite catch that. Could you please select one of the options below?",
-    options: ["Explore Services", "Pricing & Plans", "Contact Us"],
-    path: "process_options",
-  },
-};
-
-// ─── Chatbot Styles (brand palette) ──────────────────────────────────
-const chatbotStyles = {
-  chatButtonStyle: {
-    background: "#1A1A1A",
-    backgroundColor: "#1A1A1A",
-    color: "#F5F2EB",
-    fill: "#F5F2EB",
-    fontSize: "1.5rem",
-    boxShadow:
-      "0 10px 30px -5px rgba(26, 26, 26, 0.5), 0 4px 10px -2px rgba(26, 26, 26, 0.25)",
-    transition:
-      "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-  },
-  chatWindowStyle: {
-    backgroundColor: "#F5F2EB",
-    borderRadius: "16px",
-    border: "1px solid rgba(26, 26, 26, 0.08)",
-    boxShadow:
-      "0 25px 60px -12px rgba(0, 0, 0, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.1)",
-    overflow: "hidden",
-  },
-  headerStyle: {
-    backgroundColor: "#1A1A1A",
-    color: "#F5F2EB",
-    borderRadius: "16px 16px 0 0",
-  },
-  botBubbleStyle: {
-    backgroundColor: "#FFFFFF",
-    color: "#1A1A1A",
-    border: "1px solid rgba(26, 26, 26, 0.06)",
-    borderRadius: "12px",
-  },
-  userBubbleStyle: {
-    backgroundColor: "#1A1A1A",
-    color: "#FFFFFF",
-    borderRadius: "12px",
-  },
-  optionStyle: {
-    border: "1px solid #1A1A1A",
-    color: "#1A1A1A",
-    backgroundColor: "#FFFFFF",
-    borderRadius: "8px",
-    fontWeight: "500",
-  },
-  optionHoveredStyle: {
-    backgroundColor: "#1A1A1A",
-    color: "#F5F2EB",
-  },
-  chatInputAreaStyle: {
-    backgroundColor: "#FFFFFF",
-    color: "#1A1A1A",
-    borderColor: "rgba(26, 26, 26, 0.15)",
-  },
-  sendButtonStyle: {
-    backgroundColor: "#1A1A1A",
-    color: "#F5F2EB",
-  },
-};
 
 // ─── Page ────────────────────────────────────────────────────────────
 export default function Index() {
@@ -283,6 +153,34 @@ export default function Index() {
         .rcb-chat-button span {
           color: #F5F2EB !important;
           fill: #F5F2EB !important;
+        }
+
+        /* Premium Chat Window Overrides */
+        .rcb-chat-window {
+          border-radius: 16px !important;
+          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2), 0 0 20px rgba(0,0,0,0.05) !important;
+          border: 1px solid rgba(26,26,26,0.05) !important;
+          background-color: #F5F2EB !important;
+        }
+        .rcb-chat-header {
+          background-color: #1A1A1A !important;
+          color: #F5F2EB !important;
+          border-radius: 16px 16px 0 0 !important;
+        }
+        .rcb-bot-message {
+          background-color: #FFFFFF !important;
+          color: #1A1A1A !important;
+          border: 1px solid rgba(26, 26, 26, 0.06) !important;
+          border-radius: 12px !important;
+        }
+        .rcb-user-message {
+          background-color: #1A1A1A !important;
+          color: #FFFFFF !important;
+          border-radius: 12px !important;
+        }
+        .rcb-chat-input {
+          background-color: #FFFFFF !important;
+          color: #1A1A1A !important;
         }
 
         /* Fix the tooltip */
@@ -884,7 +782,6 @@ export default function Index() {
         <ChatBot
           settings={chatbotSettings}
           flow={chatbotFlow}
-          styles={chatbotStyles}
         />
       </div>
     </>
